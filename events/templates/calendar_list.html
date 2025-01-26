@@ -1,0 +1,6 @@
+<h1>Calendaris</h1>
+<ul>
+{% for calendar in calendars %}
+    <li><a href="{% url "calendar-detail" calendar.pk %}">{{ calendar.name }}</a></li>
+{% endfor %}
+</ul>

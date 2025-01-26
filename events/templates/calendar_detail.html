@@ -1,0 +1,70 @@
+{% load static %}
+{% load events %}
+
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />
+<link rel="stylesheet" href="/static/admin/css/base.css">
+
+  <link rel="stylesheet" href="/static/admin/css/dark_mode.css">
+  <script src="/static/admin/js/theme.js"></script>
+
+
+  <link rel="stylesheet" href="/static/admin/css/nav_sidebar.css">
+  <script src="/static/admin/js/nav_sidebar.js" defer></script>
+
+<link rel="stylesheet" href="/static/admin/css/forms.css">
+
+<link href="/static/admin/css/vendor/select2/select2.css" media="screen" rel="stylesheet">
+<link href="/static/admin/css/autocomplete.css" media="screen" rel="stylesheet">
+<script src="/static/admin/js/vendor/jquery/jquery.js"></script>
+<script src="/static/admin/js/vendor/select2/select2.full.js"></script>
+<script src="/static/admin/js/vendor/select2/i18n/en.js"></script>
+<script src="/static/admin/js/jquery.init.js"></script>
+<script src="/static/admin/js/core.js"></script>
+<script src="/static/admin/js/autocomplete.js"></script>
+<script src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script src="/static/admin/js/actions.js"></script>
+<script src="/static/admin/js/urlify.js"></script>
+<script src="/static/admin/js/prepopulate.js"></script>
+<script src="/static/admin/js/vendor/xregexp/xregexp.js"></script>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/static/admin/css/responsive.css">
+
+<h1>{{ calendar.name }}</h1>
+
+    {% regroup calendar.events.annotate_month.annotate_year by year as events_by_year %}
+    {% for event_by_year in events_by_year %}
+        <h2>{{ event_by_year.grouper }}</h2>
+            {% regroup event_by_year.list by month as events_by_month %}
+            {% for event_by_month in events_by_month %}
+                <h3>{% month_name_by_number event_by_month.grouper %}</h3>
+                <ul>
+                    {% for event in event_by_month.list %}
+                    <li>
+                        {{ event.start_date|date:"d" }} - <a href="{{ event.get_absolute_url }}">{{ event.name }}</a>
+                        <ul>
+                            {% if event.get_attending_members_that_are_going %}
+                            <li>
+                                Van: {{ event.get_attending_members_that_are_going|join:", " }}
+                            </li>
+                            {% endif %}
+
+                            {% if event.get_attending_members_that_are_interested %}
+                            <li>
+                                Quieren ir: {{ event.get_attending_members_that_are_interested|join:", " }}
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        {% endfor %}
+
+{% autoescape off %}
+    {% for html_calendar in html_calendars %}
+        {{ html_calendar }}
+    {% endfor %}
+{% endautoescape %}
