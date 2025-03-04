@@ -38,7 +38,8 @@ def is_admin_change_view(path: str, app_name: str, model_name: str) -> bool:
 
 def is_anonymous_allowed(request) -> bool:
     return request.path.startswith("/admin/") and not (
-        is_admin_list_view(request.path, "events", "calendar")
+        request.path == "/admin/login/"
+        or is_admin_list_view(request.path, "events", "calendar")
         or is_admin_list_view(request.path, "events", "event")
         or is_admin_list_view(request.path, "events", "member")
     )
