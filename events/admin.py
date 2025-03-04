@@ -37,9 +37,14 @@ def admin_change_link(
     return mark_safe(f'<a href="{admin_url}">{link_text}</a>')
 
 
+class AttendanceInline(admin.TabularInline):
+    model = Attendance
+
+
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     search_fields = ("name",)
+    inlines = (AttendanceInline,)
 
 
 @admin.register(Member)
