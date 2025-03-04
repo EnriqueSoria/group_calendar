@@ -47,7 +47,6 @@ def is_anonymous_allowed(request) -> bool:
 
 class AutoAuthMiddleware(AuthenticationMiddleware):
     def process_request(self, request):
-        if is_anonymous_allowed(request):
+        super().process_request(request)
+        if not request.user and is_anonymous_allowed(request):
             request.user = AdminFakeUser()
-        else:
-            return super().process_request(request)
